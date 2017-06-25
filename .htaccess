@@ -1,0 +1,2 @@
+RewriteEngine On
+RewriteRule ^gma/([0-9]+)/([0-9]+)/([0-9]+)  /gma.php?z=$1&x=$2&y=$3 [QSA]
