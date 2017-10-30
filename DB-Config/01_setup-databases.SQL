@@ -1,5 +1,5 @@
 -- Create MySql User
--- TODO: substitute ***** with yur password
+-- TODO: substitute ***** with your password
 CREATE USER 'gma'@'localhost' IDENTIFIED BY '*****';
 
 -- Create databases

@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  php:
+    build: ./images/php
+    volumes: 
+      - ./:/var/www/html
+    ports: 
+      - '8000:80'
+    depends_on:
+      - db
+      - redis
+  python:
+    build: ./images/python
+    depends_on:
+      - db
+      - redis
+    links:
+     - db
+     - redis
+  db:
+    build: ./images/mysql
+    restart: always
+    ports: 
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: gma
+      MYSQL_ROOT_PASSWORD: test
+  redis:
+    build: ./images/redis
+    restart: always
+    ports: 
+      - '6379:6379'

@@ -1,7 +1,7 @@
 [mysql]
-host = localhost
-user = gma
-password = *****
+host = 0.0.0.0
+user = root
+password = test
 database = gma
 port = 3306
 
