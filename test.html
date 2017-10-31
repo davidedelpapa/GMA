@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> 
-    
+
+<head>
+
     <title>Quick Test GMA with Leaflet</title>
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"
-        integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ=="
-        crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"
-        integrity="sha512-A7vV8IFfih/D732iSSKi20u/ooOfj/AGehOKq0f4vLT1Zr2Y+RX7C+w8A1gaSasGtRUZpF/NZgzSAu4/Gc41Lg=="
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js" integrity="sha512-A7vV8IFfih/D732iSSKi20u/ooOfj/AGehOKq0f4vLT1Zr2Y+RX7C+w8A1gaSasGtRUZpF/NZgzSAu4/Gc41Lg=="
         crossorigin=""></script>
-    
+
     <style>
         #map {
             width: 600px;
@@ -22,48 +21,63 @@
     </style>
 
 </head>
+
 <body>
-<header >
-    <center><h1>Venice!</h1></center>
-</header>
+    <header>
+        <center>
+            <h1>Venice!</h1>
+        </center>
+    </header>
 
-<center><div id="map"></div></center>
-<script>
+    <center>
+        <div id="map"></div>
+    </center>
+    <script>
 
-    // Add SentinelMap basemap
-    var sentinelmap = L.tileLayer('https://tile.sentinelmap.eu/2016/summer/rgb/{z}/{x}/{y}.jpg?key={pkey}', {
-        attribution: 'Modified <a href="https://scihub.copernicus.eu/">Copernicus</a> Sentinel data 2016 by <a href="https://www.sentinelmap.eu">SentinelMap</a>',
-        maxZoom: 14,
-	    minZoom: 5,
-        pkey: 'your-sentinelmap-key' // goto: https://devs.sentinelmap.eu/ to get one
-    });
+        // Add SentinelMap basemap
+        /*
+        var sentinelmap = L.tileLayer('https://tile.sentinelmap.eu/2016/summer/rgb/{z}/{x}/{y}.jpg?key={pkey}', {
+            attribution: 'Modified <a href="https://scihub.copernicus.eu/">Copernicus</a> Sentinel data 2016 by <a href="https://www.sentinelmap.eu">SentinelMap</a>',
+            maxZoom: 14,
+            minZoom: 5,
+            pkey: 'your-sentinelmap-key' // goto: https://devs.sentinelmap.eu/ to get one
+        });
+        */
+        // Alternatively, add OpenStreetMap Layer (By MapBox)
+        /*
+        var osm = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox.streets',
+            accessToken: 'your.mapbox.access.token'
+        });
+        */
+        // Alternatively, test with GTS (https://github.com/oldmammuth/GTS/)
+        var gts = L.tileLayer('http://localhost:8000/{z}/{x}/{y}.jpg?key={gts_key}', {
+            attribution: 'Modified <a href="https://scihub.copernicus.eu/">Copernicus</a> Sentinel data 2016 by <a href="https://www.sentinelmap.eu">SentinelMap</a>',
+            minZoom: 13,
+            maxZoom: 13,
+            gts_key: 'TEST'
+        });
+        // Setup map
+        var mymap = L.map('map', {
+            center: [45.4350, 12.3450],
+            zoom: 13,
+            layers: [gts] // chose among the above					
+        });
 
-    // Alternatively, add OpenStreetMap Layer (By MapBox)
-    /*
-    var osm = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-        maxZoom: 18,
-        id: 'mapbox.streets',
-        accessToken: 'your.mapbox.access.token'
-    });
-    */
-
-    // Setup map
-    var mymap = L.map('map', {
-			center: [45.4350, 12.3450],
-			zoom: 13,
-			layers: [sentinelmap] // chose among the above					
-		});
-    
-    // Add GMA layer
-    var gma = L.tileLayer('http://localhost/gma/{z}/{x}/{y}?key={gma_key}', {
-            maxZoom: 14, // match the main layer
-            minZoom: 5,  // match the main layer
+        // Add GMA layer
+        var gma = L.tileLayer('http://localhost:8080/gma/{z}/{x}/{y}?key={gma_key}', {
+            maxZoom: 13, // match the main layer
+            minZoom: 13,  // match the main layer
             gma_key: 'TEST' // for testing purposes
         }).addTo(mymap);
-</script>
-<footer>
-    <center><h3>Quick Test GMA with Leaflet</h3></center>
-</footer>
+    </script>
+    <footer>
+        <center>
+            <h3>Quick Test GMA with Leaflet</h3>
+        </center>
+    </footer>
 </body>
+
 </html>

@@ -69,16 +69,19 @@ def redis2mysql(cursor):
                         cursor.execute("UPDATE SessionRecords  SET lastaccess = '%s' WHERE id = '%s'" % (
                             split_q[4], session_id))
                     # now we must record the tile info as well...
-                    cursor.execute(" INSERT INTO TileRecords (sessionid, timestamp, z, x, y) VALUES ('%s', '%s', '%s', '%s', '%s')" % (
-                        session_id, split_q[4], split_q[5], split_q[6], split_q[7]))
+                    cursor.execute("INSERT INTO TileRecords (sessionid, timestamp, z, x, y) VALUES ('%s', '%s', '%s', '%s', '%s')" % (
+                        session_id, split_q[4], split_q[5], split_q[6], split_q[7][:-1]))
                     tile_id = cursor.lastrowid
                 else:
-                    # Direct query, just execute it (uncomment as needed)
+                    # Direct query, just execute it. (Un)comment as needed.
                     # cursor.execute(query)
                     pass
             except (mdb.OperationalError, mdb.ProgrammingError) as e:
-                logp("[MySQL:Query] %s [ERROR-YELD] %s" %
-                     (str(query), str(e.args)))
+                # logp("[Redis:Query] %s [MySql:ERROR-YELD] %s" %
+                #     (str(query), str(e.args)))
+                print(query)
+                print(e.args)
+                print(cursor._last_executed)
             # increment counter
             counter = counter + 1
 

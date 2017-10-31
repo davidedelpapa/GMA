@@ -1,12 +1,10 @@
 FROM python:3.6
 
-RUN apt-get update \
-    && apt-get install -y build-essential python-dev libmysqlclient-dev python-redis python-mysqldb python-pip
-RUN  pip install redis \
-    && pip install mysqlclient
-RUN whoami
-ADD worker.py /
-ADD config.template /
-ADD run.sh /
+RUN apt-get update && apt-get install -y mysql-client
 
-CMD [ "./run.sh" ]
+ADD . /app
+WORKDIR /app
+RUN pip install -r requirements.txt
+
+ADD ./worker.py ./config.ini /app/
+CMD ["python", "worker.py"]
