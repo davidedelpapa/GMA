@@ -33,37 +33,53 @@
         <div id="map"></div>
     </center>
     <script>
+        // Shout-out!
+        // Function found:
+        // https://stackoverflow.com/a/901144/5784083
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+        var map_type = getParameterByName('map');
 
-        // Add SentinelMap basemap
-        /*
-        var sentinelmap = L.tileLayer('https://tile.sentinelmap.eu/2016/summer/rgb/{z}/{x}/{y}.jpg?key={pkey}', {
-            attribution: 'Modified <a href="https://scihub.copernicus.eu/">Copernicus</a> Sentinel data 2016 by <a href="https://www.sentinelmap.eu">SentinelMap</a>',
-            maxZoom: 14,
-            minZoom: 5,
-            pkey: 'your-sentinelmap-key' // goto: https://devs.sentinelmap.eu/ to get one
-        });
-        */
-        // Alternatively, add OpenStreetMap Layer (By MapBox)
-        /*
-        var osm = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-            maxZoom: 18,
-            id: 'mapbox.streets',
-            accessToken: 'your.mapbox.access.token'
-        });
-        */
-        // Alternatively, test with GTS (https://github.com/oldmammuth/GTS/)
-        var gts = L.tileLayer('http://localhost:8000/{z}/{x}/{y}.jpg?key={gts_key}', {
-            attribution: 'Modified <a href="https://scihub.copernicus.eu/">Copernicus</a> Sentinel data 2016 by <a href="https://www.sentinelmap.eu">SentinelMap</a>',
-            minZoom: 13,
-            maxZoom: 13,
-            gts_key: 'TEST'
-        });
+        if (map_type == 'osm') {
+            // Tests with OpenStreetMap Layer (By MapBox)
+            var mapbox_token = getParameterByName('access_token');
+            var this_map = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                maxZoom: 18,
+                id: 'mapbox.streets',
+                accessToken: mapbox_token
+            });
+
+        } else if (map_type == 'gts') {
+            // Test with GTS (https://github.com/oldmammuth/GTS/)
+            var this_map = L.tileLayer('http://localhost:8000/{z}/{x}/{y}.jpg?key={gts_key}', {
+                attribution: 'Modified <a href="https://scihub.copernicus.eu/">Copernicus</a> Sentinel data 2016 by <a href="https://www.sentinelmap.eu">SentinelMap</a>',
+                minZoom: 13,
+                maxZoom: 13,
+                gts_key: 'TEST'
+            });
+        } else {
+            // Tests with SentinelMap basemap        
+            var this_map = L.tileLayer('https://tile.sentinelmap.eu/2016/summer/rgb/{z}/{x}/{y}.jpg?key={pkey}', {
+                attribution: 'Modified <a href="https://scihub.copernicus.eu/">Copernicus</a> Sentinel data 2016 by <a href="https://www.sentinelmap.eu">SentinelMap</a>',
+                maxZoom: 14,
+                minZoom: 5,
+                pkey: '4eab6afaf59cadadc30cfa73495b9bd2' // goto: https://devs.sentinelmap.eu/ to get your own
+            });
+
+        }
         // Setup map
         var mymap = L.map('map', {
             center: [45.4350, 12.3450],
             zoom: 13,
-            layers: [gts] // chose among the above					
+            layers: [this_map]
         });
 
         // Add GMA layer
